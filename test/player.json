@@ -1,0 +1,10 @@
+{
+	"id": 5,
+	"name": "Felix Hernandez",
+	"team": "Seattle Mariners",
+	"position": "SP",
+	"stats": {
+		"wins": 19,
+		"losses": 6
+	}
+}

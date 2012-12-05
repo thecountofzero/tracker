@@ -1,0 +1,22 @@
+[
+	{
+		"name": "Ryan Braun",
+		"team": "Milwaukee Brewers",
+		"position": "OF"
+	},
+	{
+		"name": "Felix Hernandez",
+		"team": "Seattle Mariners",
+		"position": "SP"
+	},
+	{
+		"name": "Kris Medlen",
+		"team": "Atlanta Braves",
+		"position": "SP"
+	},
+	{
+		"name": "Evan Longoria",
+		"team": "Tampa Bay Rays",
+		"position": "3B"
+	}
+]
