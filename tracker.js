@@ -88,7 +88,8 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 				linkedObj;
 
 			if(!tagName) {
-				//this.destroy();
+				steal.dev.warn("Tracker is for form elements");
+				this.destroy();
 				return;
 			}
 			
@@ -97,6 +98,7 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 			// This plugin is only for inputs, textareas and selects
 			// TODO: What about datalist, keygen and output?
 			if(!(tagName === "input" || tagName === "textarea" || tagName === "select")) {
+				steal.dev.warn("Tracker is for form elements");
 				this.destroy();
 				return;
 			}
