@@ -65,7 +65,7 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 	 * Tracker is a plugin used to link a form element with a can.Observe
 	 * @type {[type]}
 	 */
-	var Tracker = Control({
+	var Tracker = window.Tracker = Control({
 
 		defaults: {
 			attr: undefined,
@@ -377,6 +377,10 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 			return this._val.call(this, val);
 		},
 
+		'original': function() {
+			return this._original;
+		},
+
 		/**
 		 * Has this.element's value changed since tracker has been employed
 		 * @return {Boolean}
@@ -431,7 +435,7 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 		'destroy': function() {
 
 			// Remove the dirty class
-			this.element.removeClass(this.elements.options.dirtyClass);
+			this.element.removeClass(this.options.dirtyClass);
 
 			// Call the super's destroy
 			can.Control.prototype.destroy.call(this);
