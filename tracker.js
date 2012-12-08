@@ -71,7 +71,8 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 			attr: undefined,
 			_attrNameToWatch: "", // This is use internally for templated event bind to the attribute on the linkedObj we are tracking
 			initFromLinkedObj: true, // On init, set the this.element's value to the value it's linked to in the linkedObj
-			dirtyClass: "dirty" // Class added to this.element when it's value has changed from it's original value
+			dirtyClass: "dirty", // Class added to this.element when it's value has changed from it's original value
+            changeCallback: can.noop // Function to be executed when the form element's value is changed
 		}
 	}, {
 		/**
@@ -206,6 +207,9 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 						return el.children("option").filter(":selected").val();
 					}
 					else {
+
+                        // FIXME: Handle when val does not have an option in the dropdown
+                        // Add one or don't change
 						el.val(val).trigger('change');
 						return this;
 					}
@@ -418,7 +422,11 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 		'change': function(el, ev) {
 			steal.dev.log('The target has been changed');
 
+            // Add or remove the dirty class depending on if the element is changed
 			this.element[this.changed() ? "addClass" : "removeClass"](this.options.dirtyClass);
+
+            // Execute the change callback
+            this.options.changeCallback(this._val.call(this));
 
 			// Execute the function that will update the linked object
 			this._updateLinkedObjFn.apply(this, [this._val.call(this)]);
