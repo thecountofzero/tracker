@@ -173,10 +173,10 @@ steal('can/control', 'can/observe', 'can/util', function(Control, Observe, Util)
 			else if(inputType === "radio") { // Radio buttons
 
 				if(this._mode === "observe" && this.options.initFromLinkedObj) {
-					el.filter("[value=" + linkedObj.attr(this._attr) + "]").prop("checked", true);
+					el.filter("[value='" + linkedObj.attr(this._attr) + "']").prop("checked", true);
 				}
 				else if(this._mode === "object" && this.options.initFromLinkedObj) {
-					el.filter("[value=" + linkedObj[this._attr] + "]").prop("checked", true);
+					el.filter("[value='" + linkedObj[this._attr] + "']").prop("checked", true);
 				}
 
 				// Getter/setter
@@ -189,7 +189,7 @@ steal('can/control', 'can/observe', 'can/util', function(Control, Observe, Util)
 					else {
 
                         // Select the radio button
-						el.filter("[value=" + val + "]").prop("checked", true).trigger("change");
+						el.filter("[value='" + val + "']").prop("checked", true).trigger("change");
 						return this;
 					}
 				};
@@ -223,6 +223,8 @@ steal('can/control', 'can/observe', 'can/util', function(Control, Observe, Util)
 						return self.options.multiSelectAsString ? el.val().toString() : el.val();
 					}
 					else {
+
+                        // FIXME: Make sure options actually exist in select
 						el.val(self.options.multiSelectAsString ? val.toString().replace(/\s*,\s*/gm, ',').split(",") : val).trigger('change');
 						return this;
 					}
