@@ -249,7 +249,18 @@ steal('can/control', 'can/observe', 'can/util', function(Control, Observe, Util)
 						return el.val();
 					}
 					else {
-						el.val(val).trigger('change');
+
+                        // If it's a select dropdown, make sure the new value has an option
+                        if(tagName === "select") {
+                            if(el.find('option[value="' + val + '"]').length) {
+                                el.val(val).trigger('change');
+                            }
+                            else {
+                                steal.dev.warn("No such option exists in select: " + val);
+                            }
+                        }
+						else el.val(val).trigger('change');
+
 						return this;
 					}
 				};
