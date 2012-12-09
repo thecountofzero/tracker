@@ -503,6 +503,64 @@ steal("funcunit/qunit", "can/observe", "can/observe/attributes", "can/model", "c
 		ok(!$drafted.hasClass("dirty"), "Textbox does not have dirty class");
 	});
 
+	test("Radio Buttons - Observe Mode (can.Observe)", function() {
+
+		$("#qunit-test-area").html("<input type='radio' name='nickname' value='The King' /><input type='radio' name='nickname' value='King Felix' /><input type='radio' name='nickname' value='El Rey' />");
+
+		var $nickname = $("input[name=nickname]"),
+			player = new Observe({
+				name: "Felix Hernandez",
+				team: "Seattle Mariners",
+				nickname: "The King"
+			}),
+			tracker = new Tracker($nickname, {
+				linkedObj: player
+			});
+
+		equals(tracker._mode, "observe", "Tracker is in observe mode");
+
+		equals($nickname.filter(":checked").val(), "The King", "Nickname is The King");
+		equals(tracker.val(), "The King", "Tracker value is The King");
+
+		$nickname.filter("[value='King Felix']").click();
+
+		equals(tracker.val(), "King Felix", "Tracker value is King Felix");
+		equals(player.attr("nickname"), "King Felix", "player.attr('nickname') is King Felix");
+
+		tracker.val("El Rey");
+
+		equals($nickname.filter(":checked").val(), "El Rey", "Nickname is El Rey");
+		equals(tracker.val(), "El Rey", "Tracker value is El Rey");
+		equals(player.attr("nickname"), "El Rey", "player.attr('nickname') is El Rey");
+
+		player.attr("nickname", "King Felix");
+
+		equals($nickname.filter(":checked").val(), "King Felix", "Nickname is King Felix");
+		equals(tracker.val(), "King Felix", "Tracker value is King Felix");
+		equals(player.attr("nickname"), "King Felix", "player.attr('nickname') is King Felix");
+
+		equals(tracker.original(), "The King", "Original value is The King");
+		ok(tracker.changed(), "Radio button value has changed");
+		ok($nickname.hasClass("dirty"), "Radio button has dirty class");
+
+		tracker.val("checkme");
+
+		equals($nickname.filter(":checked").val(), "King Felix", "Nickname is King Felix");
+
+		tracker.val(0);
+
+		equals(tracker.val(), "King Felix", "Tracker value is King Felix");
+		equals($nickname.filter(":checked").val(), "King Felix", "Nickname is King Felix");
+
+		tracker.reset();
+
+		equals($nickname.filter(":checked").val(), "The King", "Nickname is The King");
+		equals(tracker.val(), "The King", "Tracker value is The King");
+
+		ok(!tracker.changed(), "Radio button value has not changed");
+		ok(!$nickname.hasClass("dirty"), "Radio button does not have dirty class");
+	});
+
 })();
 
 
