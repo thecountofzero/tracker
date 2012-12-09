@@ -1,4 +1,4 @@
-steal('can/control', 'can/observe', function(Control, Observe) {
+steal('can/control', 'can/observe', 'can/util', function(Control, Observe, Util) {
 
 	var _getAttr = function(name, attr) {
 			return attr ? attr : name;
@@ -72,7 +72,8 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 			_attrNameToWatch: "", // This is use internally for templated event bind to the attribute on the linkedObj we are tracking
 			initFromLinkedObj: true, // On init, set the this.element's value to the value it's linked to in the linkedObj
 			dirtyClass: "dirty", // Class added to this.element when it's value has changed from it's original value
-            changeCallback: can.noop // Function to be executed when the form element's value is changed
+            changeCallback: can.noop, // Function to be executed when the form element's value is changed
+            multiSelectAsString: false
 		}
 	}, {
 		/**
@@ -86,7 +87,8 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 				el = this.element,
 				tagName = el.prop("tagName"),
 				inputType,
-				linkedObj;
+				linkedObj,
+                valueHolder;
 
 			if(!tagName) {
 				steal.dev.warn("Tracker is for form elements");
@@ -185,15 +187,29 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 						return el.filter(":checked").val();
 					}
 					else {
+
+                        // Select the radio button
 						el.filter("[value=" + val + "]").prop("checked", true).trigger("change");
 						return this;
 					}
 				};
 			}
-			else if(tagName === "select") { // Select dropdowns
+			else if(tagName === "select" && el.prop('multiple')) { // Select (multiple) dropdowns
 
 				if(this._mode === "observe" && this.options.initFromLinkedObj) {
-					el.val(linkedObj.attr(this._attr));
+                    if(self.options.multiSelectAsString) {
+                        el.val(linkedObj.attr(this._attr).toString().replace(/\s*,\s*/gm, ',').split(","));
+                    }
+					else {
+                        valueHolder = linkedObj.attr(this._attr);
+
+                        // Check if the value is an array
+                        if(!can.isArray(valueHolder)) {
+                            steal.dev.warn("Multi-select expect array input");
+                        }
+
+                        el.val(linkedObj.attr(this._attr));
+                    }
 				}
 				else if(this._mode === "object" && this.options.initFromLinkedObj) {
 					el.val(linkedObj[this._attr]);
@@ -204,20 +220,18 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 					if(val === undefined) {
 
 						// Get the selected option(s)
-						return el.children("option").filter(":selected").val();
+						return self.options.multiSelectAsString ? el.val().toString() : el.val();
 					}
 					else {
-
-                        // FIXME: Handle when val does not have an option in the dropdown
-                        // Add one or don't change
-						el.val(val).trigger('change');
+						el.val(self.options.multiSelectAsString ? val.toString().replace(/\s*,\s*/gm, ',').split(",") : val).trigger('change');
 						return this;
 					}
 				};
 			}
 			else if(inputType === "text" ||
 				inputType === "password" ||
-				tagName === "textarea") { // Textboxes, passwords and textareas
+				tagName === "textarea" ||
+                tagName === "select") { // Textboxes, passwords, selects and textareas
 
 				if(this._mode === "observe" && this.options.initFromLinkedObj) {
 					el.val(linkedObj.attr(this._attr));
@@ -311,11 +325,14 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 				if(self._mode === "observe") { // LinkedObj is a can.Observe
 					return function(newVal) {
 
+                        // Update the can.Observe
 						self.options.linkedObj.attr(self._attr, newVal);
 					};
 				}
 				else if(self._mode === "form") { // LinkedObj is a form element
 					return function(newVal) {
+
+                        // FIXME: Need to update this because different form elements are updated differently
 						self.options.linkedObj.val(newVal);
 					};
 				}
@@ -340,24 +357,28 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 
 			return (function() {
 
-				if(self._mode === "observe") { // LinkedObj is a can.Observe
+				if(self._mode === "observe") { // linkedObj is a can.Observe
 					return function(o, ev, newVal, oldVal) {
-						if(newVal !== self._val.call(self)) {
+
+						//if(newVal !== self._val.call(self)) {
+                        if(!Util.Object.same(newVal, self._val.call(self))) {
+
 							self._val.call(self, newVal);
 						}
 						self.element[self.changed() ? "addClass" : "removeClass"](self.options.dirtyClass);
 					};
 				}
-				else if(self._mode === "form") { // LinkedObj is a form element
+				else if(self._mode === "form") { // linkedObj is a form element
 					return function(el, ev) {
 						var newVal = $(el).val();
+
 						if(newVal !== self._val.call(self)) {
 							self._val.call(self, newVal);
 						}
 						self.element[self.changed() ? "addClass" : "removeClass"](self.options.dirtyClass);
 					};
 				}
-				else if(self._mode === "object") { // LinkedObj is a plain object
+				else if(self._mode === "object") { // linkedObj is a plain object
 					return function(o, ev, newVal, oldVal) {
 						if(newVal !== self._val.call(self)) {
 							self._val.call(self, newVal);
@@ -392,7 +413,7 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 		 * @return {Boolean}
 		 */
 		'changed': function() {
-			return this._original !== this._val.call(this);
+            return !(Util.Object.same(this._original, this._val.call(this)));
 		},
 
 		/**
@@ -420,16 +441,18 @@ steal('can/control', 'can/observe', function(Control, Observe) {
 		 * @param {[jQuery.Event} [ev]
 		 */
 		'change': function(el, ev) {
-			steal.dev.log('The target has been changed');
+            var newVal = this._val.call(this);
+
+			steal.dev.log('The target has been changed: ' + newVal);
 
             // Add or remove the dirty class depending on if the element is changed
 			this.element[this.changed() ? "addClass" : "removeClass"](this.options.dirtyClass);
 
             // Execute the change callback
-            this.options.changeCallback(this._val.call(this));
+            this.options.changeCallback(newVal);
 
 			// Execute the function that will update the linked object
-			this._updateLinkedObjFn.apply(this, [this._val.call(this)]);
+			this._updateLinkedObjFn.apply(this, [newVal]);
 		},
 
 		/**
