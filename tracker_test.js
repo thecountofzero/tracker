@@ -445,6 +445,64 @@ steal("funcunit/qunit", "can/observe", "can/observe/attributes", "can/model", "c
 		ok(!$name.hasClass("dirty"), "Textbox does not have dirty class");
 	});
 
+	test("Checkbox - Observe Mode (can.Observe)", function() {
+
+		$("#qunit-test-area").html("<input type='checkbox' id='drafted' name='drafted' />");
+
+		var $drafted = $("#drafted"),
+			player = new Observe({
+				name: "Felix Hernandez",
+				team: "Seattle Mariners",
+				drafted: true
+			}),
+			tracker = new Tracker($drafted, {
+				linkedObj: player
+			});
+
+		equals(tracker._mode, "observe", "Tracker is in observe mode");
+
+		equals($drafted.prop("checked"), true, "Checkbox is checked");
+		equals(tracker.val(), true, "Tracker value is true");
+
+		$drafted.prop("checked", false).trigger("change");
+
+		equals(tracker.val(), false, "Tracker value is false");
+		equals(player.attr("drafted"), false, "player.attr('drafted') is false");
+
+		tracker.val(true);
+
+		equals($drafted.prop("checked"), true, "Checkbox is checked");
+		equals(tracker.val(), true, "Tracker value is true");
+		equals(player.attr("drafted"), true, "player.attr('drafted') is true");
+
+		player.attr("drafted", false);
+
+		equals($drafted.prop("checked"), false, "Checkbox is not checked");
+		equals(tracker.val(), false, "Tracker value is false");
+		equals(player.attr("drafted"), false, "player.attr('drafted') is false");
+
+		equals(tracker.original(), true, "Original value is true");
+		ok(tracker.changed(), "Textbox value has changed");
+		ok($drafted.hasClass("dirty"), "Textbox has dirty class");
+
+		tracker.val("checkme");
+
+		equals(tracker.val(), true, "Tracker value is true");
+
+		tracker.val(0);
+
+		equals(tracker.val(), false, "Tracker value is false");
+		equals($drafted.prop("checked"), false, "Checkbox is not checked");
+
+		tracker.reset();
+
+		equals($drafted.prop("checked"), true, "Checkbox is checked");
+		equals(tracker.val(), true, "Tracker value is true");
+
+		ok(!tracker.changed(), "Textbox value has not changed");
+		ok(!$drafted.hasClass("dirty"), "Textbox does not have dirty class");
+	});
+
 })();
 
 
