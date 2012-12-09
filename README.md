@@ -4,7 +4,7 @@ Tracker enables two-way binding between a form field and an attribute of a can.O
 
 If you change the can.Observe, the form field updates to match the new value. While this can already be accomplished using live binding, the following cannot. Update the form field and the can.Observe attribute linked to the form field is updated.
 
-This used to be possible with the Tie plugin, but I think Tie has been untied (deprecated).
+This used to be possible with the Tie plugin, but I think Tie has been "untied" (deprecated).
 
 Currently Tracker works on textboxes, passwords, checkboxes, radio buttons, textareas, selects and multi-selects.
 
@@ -85,7 +85,7 @@ observe.attr("singer", "Adam Duritz") --> Textbox set to "Adam Duritz"
 
 **Notes**
 
-* If the textbox is updated outside of tracker using jQuery's val() function ````$("#singer").val("Michael Jackson")````, Tracker won't know about it. This is because using .val() does not trigger the change event on the textbox. As of now I do not know how to resolve this. It will only work if you do ````$("#singer").val("Michael Jackson").trigger("change")````. This is the case for all form elements.
+* If the textbox is updated outside of tracker using jQuery's val() function ````$("#singer").val("Michael Jackson")````, Tracker won't know about it. This is because using .val() does not trigger the change event on the textbox. As of now I do not know how to resolve this. It will only work if you do ````$("#singer").val("Michael Jackson").trigger("change")````. This is the case for all types of form elements supported by Tracker.
 
 **Checkbox**
 
@@ -109,7 +109,7 @@ tracker.val() --> true
 tracker.val(false) --> Unchecks checkbox and sets observe.isAwesome to false
 observe.attr("isAwesome", true) --> Checks checkbox
 // Uncheck the checkbox --> Sets observe.isAwesome to false
-observe.attr("isAwesome", "He is awesome") --> Checks checkbox
+observe.attr("isAwesome", "He is awesome") --> Checks checkbox since "He is awesome" is truthy
 ````
 
 **Select Dropdowns**
@@ -147,7 +147,7 @@ observe.attr("favoriteSong", "Head Like A Hole") --> Select does not change
 
 **Multiple Select Dropdowns**
 
-Multi-selects return an array when calling .val() and expect an array when setting, although a string will work if you're only selecting one option. By default, this is how Tracker functions as well. If you link an attribute to a multi-select and select options, that attribute will be updated with an array.
+Multi-selects return an array when calling .val() and expect an array when setting, although a string will work if you're only selecting one option. By default, this is how Tracker functions as well. If you link a can.Observe attribute to a multi-select and select options, that attribute will be updated with an array.
 
 ````
 <select id="favoriteSong" name="favoriteSong" mutliple />
@@ -184,9 +184,9 @@ tracker.val() --> "Hurt,Burn"
 tracker.val("Wish, Closer") --> Selects "Wish" and "Closer"" and sets observe.favoriteSong to "Wish, Closer"
 ````
 
-**Notes**
+**To Dos**
 
-* Need to make sure the selected options exist before setting
+* Need to make sure the selected options exist before setting. This is currently a bug
 
 **Radio Buttons**
 
