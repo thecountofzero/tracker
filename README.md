@@ -2,9 +2,11 @@
 
 Tracker enables two-way binding between a form field and an attribute of a can.Observe
 
-If you change the can.Observe and the form field updates to match the new value. While this can already be accomplished using live binding, the following cannot. Update the form field and the can.Observe attribute linked to the form field is updated.
+If you change the can.Observe, the form field updates to match the new value. While this can already be accomplished using live binding, the following cannot. Update the form field and the can.Observe attribute linked to the form field is updated.
 
-Currently Tracker works on textboxes, passwords, checkboxes, radio buttons, textareas and selects.
+This used to be possible with the Tie plugin, but I think Tie has been untied (deprecated).
+
+Currently Tracker works on textboxes, passwords, checkboxes, radio buttons, textareas, selects and multi-selects.
 
 #####Basic Usage:
 
@@ -22,18 +24,20 @@ The element passed to Tracker must be an input, textarea or select form element.
 
 By default, Tracker will use the "name" property of the form element as the name of the attribute of the can.Observe it should link to. This can be overridden or ignored by specifying the "attr" option when instantiating Tracker.
 
-Tracker works by listening to changes on the form field. When a change occurs, it updates the linked attribute on the can.Observe with the new value. Tracker also listens for changes to the linked attribte of the can.Observe, and when a change occurs, it updates the form element. Pretty simple.
+#####How Does Tracker Work:
+
+Tracker works by listening to changes on the form field. When a change occurs, it updates the linked attribute on the can.Observe with the new value. Tracker also listens for changes to the linked attribute of the can.Observe, and when a change occurs, it updates the form element. Pretty simple.
 
 
 #####Options: 
 
-**linkedObj** (object): The object that Tracker should link the form element to. While the primary use cases are for can.Observes, Tracker also allows you to specify a plain object or even another form element. Change a textbox and have another stay in sync (not sure of any practical uses for this yet, but I was bored).
+**linkedObj** (object): The object that Tracker should link the form element to. While the primary use cases are for can.Observes, Tracker also allows you to specify a plain object (one-way binding) or even another form element. Change a textbox and have another stay in sync (not sure of any practical uses for this yet, but I was bored). If you do not specify a linkedObj, Tracker will act as a proxy of sorts for getting and setting values on the associated form element (simple mode).
 
-**attr** (string, defaults to undefined): Tells Tracker the name of the attribute on the can.Observe to link to. If unspecified, Tracker uses the "name" property of _this.element_
+**attr** (string, defaults to undefined): Tells Tracker the name of the attribute on the can.Observe to link to. If unspecified, Tracker uses the "name" property of _this.element_. If neither exists, then Tracker will enter simple mode and act as a proxy for the form element.
 
-**initFromLinkedObj** (boolean, defaults to true): Whether or not to set this.element's value to the value of the attribute it's linked to on linkedObj during init.
+**initFromLinkedObj** (boolean, defaults to true): Whether or not to initialize the form element's value to the value of the attribute it's linked to on linkedObj during init.
 
-**dirtyClass** (string, defaults to 'dirty'): The name of the CSS class to assign to _this.element_ when its value has been changed (differs from its original value determined during initialization of Tracker). This allows you to visually see what has been changed.
+**dirtyClass** (string, defaults to 'dirty'): The name of the CSS class to assign to the form element when its value has been changed (differs from its original value determined during initialization of Tracker). This allows you to apply styles to visually see what has been changed.
 
 
 #####Methods:
@@ -44,7 +48,7 @@ Reads or sets the value of Tracker. The value is the value of the form element. 
 
 **original** ````Tracker.original()````
 
-Retrieves the original value of the form element when Tracker was initialized
+Retrieves the original value of the form element when Tracker was initialized. If "initFromLinkedObj" is set, this will be the value set from the linkedObj
 
 **changed** ````Tracker.changed()````
 
