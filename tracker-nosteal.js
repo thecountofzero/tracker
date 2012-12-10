@@ -38,7 +38,7 @@
 					return "observe";
 				}
 				else {
-					steal.dev.warn("Attribute to link to not specified. Either set 'name' attribute on this.element or use 'attr' option");
+					console.log("Attribute to link to not specified. Either set 'name' attribute on this.element or use 'attr' option");
 					return "simple";
 				}
 			}
@@ -47,16 +47,16 @@
 			}
 			else if(o instanceof Object) {
 				if(attr) {
-					steal.dev.warn("LinkedObj is a plain object. Only one-way binding will work. Consider converting to can.can.Observe");
+					console.log("LinkedObj is a plain object. Only one-way binding will work. Consider converting to can.can.Observe");
 					return "object";
 				}
 				else {
-					steal.dev.warn("Attribute to link to not specified. Either set 'name' attribute on this.element or use 'attr' option");
+					console.log("Attribute to link to not specified. Either set 'name' attribute on this.element or use 'attr' option");
 					return "simple";
 				}
 			}
 			else {
-				steal.dev.warn("Tracker in simple mode");
+				console.log("Tracker in simple mode");
 				return "simple";
 			}
 		};
@@ -91,7 +91,7 @@
                 valueHolder;
 
 			if(!tagName) {
-				steal.dev.warn("Tracker is for form elements");
+				console.log("Tracker is for form elements");
 				this.destroy();
 				return;
 			}
@@ -101,7 +101,7 @@
 			// This plugin is only for inputs, textareas and selects
 			// TODO: What about datalist, keygen and output?
 			if(!(tagName === "input" || tagName === "textarea" || tagName === "select")) {
-				steal.dev.warn("Tracker is for form elements");
+				console.log("Tracker is for form elements");
 				this.destroy();
 				return;
 			}
@@ -147,7 +147,7 @@
 
 					// Warn when the value we are setting a checkbox with is not a boolean
 					if(typeof linkedObj.attr(this._attr) !== "boolean") {
-						steal.dev.warn("Linked attribure is not a boolean. You may experience strange results");
+						console.log("Linked attribure is not a boolean. You may experience strange results");
 					}
 				}
 				else if(this._mode === "object" && this.options.initFromLinkedObj) {
@@ -205,7 +205,7 @@
 
                         // Check if the value is an array
                         if(!can.isArray(valueHolder)) {
-                            steal.dev.warn("Multi-select expect array input");
+                            console.log("Multi-select expect array input");
                         }
 
                         el.val(linkedObj.attr(this._attr));
@@ -258,7 +258,7 @@
                                 el.val(val).trigger('change');
                             }
                             else {
-                                steal.dev.warn("No such option exists in select: " + val);
+                                console.log("No such option exists in select: " + val);
                             }
                         }
 						else el.val(val).trigger('change');
@@ -303,7 +303,7 @@
 					// Set the _mode to simple
 					this._mode = "simple";
 
-					steal.dev.warn("Cannot track back to yourself (form mode)");
+					console.log("Cannot track back to yourself (form mode)");
 				}
 				else {
 
@@ -456,7 +456,7 @@
 		'change': function(el, ev) {
             var newVal = this._val.call(this);
 
-			steal.dev.log('The target has been changed: ' + newVal);
+			console.log('The target has been changed: ' + newVal);
 
             // Add or remove the dirty class depending on if the element is changed
 			this.element[this.changed() ? "addClass" : "removeClass"](this.options.dirtyClass);
