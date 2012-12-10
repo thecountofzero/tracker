@@ -33,7 +33,7 @@
 
 		// Determines the mode of the plugin
 		_getMode = function(o, attr) {
-			if(_iscan.Observe(o)) {
+			if(_isObserve(o)) {
 				if(attr) {
 					return "observe";
 				}
