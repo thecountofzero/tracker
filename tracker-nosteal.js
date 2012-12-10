@@ -1,12 +1,12 @@
-(function(Control, Observe, window) {
+(function(can, window, undefined) {
 
 	var _getAttr = function(name, attr) {
 			return attr ? attr : name;
 		},
 
-		// Checks if an object is a can.Observe
-		_isObserve = function(o) {
-			return o instanceof Observe;
+		// Checks if an object is a can.can.Observe
+		_iscan.Observe = function(o) {
+			return o instanceof can.Observe;
 		},
 
 		// Checks if an object is an HTMLElement
@@ -33,7 +33,7 @@
 
 		// Determines the mode of the plugin
 		_getMode = function(o, attr) {
-			if(_isObserve(o)) {
+			if(_iscan.Observe(o)) {
 				if(attr) {
 					return "observe";
 				}
@@ -47,7 +47,7 @@
 			}
 			else if(o instanceof Object) {
 				if(attr) {
-					steal.dev.warn("LinkedObj is a plain object. Only one-way binding will work. Consider converting to can.Observe");
+					steal.dev.warn("LinkedObj is a plain object. Only one-way binding will work. Consider converting to can.can.Observe");
 					return "object";
 				}
 				else {
@@ -62,10 +62,10 @@
 		};
 
 	/**
-	 * Tracker is a plugin used to link a form element with a can.Observe
+	 * Tracker is a plugin used to link a form element with a can.can.Observe
 	 * @type {[type]}
 	 */
-	var Tracker = window.Tracker = Control({
+	var Tracker = window.Tracker = can.Control({
 
 		defaults: {
 			attr: undefined,
@@ -120,7 +120,7 @@
 
 			// Determine the mode for this instance. Valid modes include observe, form and simple
 			// The mode is based on the linkedObj
-			// observe means the linkedObj is a can.Observe (or can.Model)
+			// observe means the linkedObj is a can.can.Observe (or can.Model)
 			// form means the linkedObj is a form element
 			// object means the linkedObj is a plain object
 			// simple means there is no linkedObj
@@ -277,9 +277,9 @@
 		 * We are using the "_attrNameToWatch" option for templated event binding to bind to the
 		 * appropriate attribute of the linkedObj
 		 *
-		 * When the linkedObj is a can.Observe, we want to bind to a specific attribute of the observe
+		 * When the linkedObj is a can.can.Observe, we want to bind to a specific attribute of the observe
 		 * When the linkedObj is a form element, we want to bind to the "change" event of that form element
-		 * When the linkedObj is a plain object, we convert it to a can.Observe for internal use
+		 * When the linkedObj is a plain object, we convert it to a can.can.Observe for internal use
 		 */
 		'_setupBindings': function() {
 			var linkedObj = this.options.linkedObj;
@@ -316,8 +316,8 @@
 				// Save the object in case we need/want it later
 				this.saveObject = linkedObj;
 
-				// Convert the object into a can.Observe so we can bind to changes
-				this.options.linkedObj = new can.Observe(linkedObj);
+				// Convert the object into a can.can.Observe so we can bind to changes
+				this.options.linkedObj = new can.can.Observe(linkedObj);
 
 				// Listen for changes to this specific attribute of the observe
 				this.options._attrNameToWatch = this._attr;
@@ -335,10 +335,10 @@
 			var self = this;
 
 			return (function() {
-				if(self._mode === "observe") { // LinkedObj is a can.Observe
+				if(self._mode === "observe") { // LinkedObj is a can.can.Observe
 					return function(newVal) {
 
-                        // Update the can.Observe
+                        // Update the can.can.Observe
 						self.options.linkedObj.attr(self._attr, newVal);
 					};
 				}
@@ -370,7 +370,7 @@
 
 			return (function() {
 
-				if(self._mode === "observe") { // linkedObj is a can.Observe
+				if(self._mode === "observe") { // linkedObj is a can.can.Observe
 					return function(o, ev, newVal, oldVal) {
 
 						//if(newVal !== self._val.call(self)) {
@@ -484,10 +484,10 @@
 			this.element.removeClass(this.options.dirtyClass);
 
 			// Call the super's destroy
-			can.Control.prototype.destroy.call(this);
+			can.can.Control.prototype.destroy.call(this);
 		}
 	});
 
 	return Tracker;
 
-})(can, can.Observe, this);
+})(can, this);
