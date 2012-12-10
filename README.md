@@ -35,6 +35,8 @@ Tracker works by listening to changes on the form field. When a change occurs, i
 
 **attr** (string, defaults to undefined): Tells Tracker the name of the attribute on the can.Observe to link to. If unspecified, Tracker uses the "name" property of _this.element_. If neither exists, then Tracker will enter simple mode and act as a proxy for the form element.
 
+**changeCallback** (function, defaults to can.noop): A callback that will be executed when the form element's value changes. This function will be passed the new value.
+
 **initFromLinkedObj** (boolean, defaults to true): Whether or not to initialize the form element's value to the value of the attribute it's linked to on linkedObj during init.
 
 **dirtyClass** (string, defaults to 'dirty'): The name of the CSS class to assign to the form element when its value has been changed (differs from its original value determined during initialization of Tracker). This allows you to apply styles to visually see what has been changed.
@@ -220,4 +222,11 @@ observe.attr("favoriteColor", "black") --> Selects "black" radio button
 
 * Setting the linked attribute to a value that does not have a radio button will do nothing (need to think about this)
 
+
+**Demo**
+
+
+[Fiddle Demonstrating Tracker](http://jsfiddle.net/thecountofzero/qYdwR/596/)
+
+http://jsfiddle.net/thecountofzero/qYdwR/596/
 
