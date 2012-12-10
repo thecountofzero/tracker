@@ -5,7 +5,7 @@
 		},
 
 		// Checks if an object is a can.can.Observe
-		_iscan.Observe = function(o) {
+		_isObserve = function(o) {
 			return o instanceof can.Observe;
 		},
 
