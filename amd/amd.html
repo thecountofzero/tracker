@@ -1,0 +1,41 @@
+<html>
+    <head>
+        <style>
+        	.dirty { background: yellow; }
+        </style>
+    </head>
+    <body>
+    	<input id='name' name='name' value='' /><br/><br/>
+    	<input type='checkbox' id='drafted' name='drafted' />drafted
+
+		<script type="text/javascript" src="require.js"></script>
+		<script type="text/javascript">
+			require.config({
+				paths : {
+			  		"jquery" : "https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min"
+				}
+			});
+
+		  	require(['tracker', 'can/util/library'], function(tracker, can) {
+				console.log('AMD');
+				console.dir(tracker);
+
+				var $name = $("#name"),
+					player = new can.Observe({
+						name: "Ryan Braun",
+						team: "Milwaukee Brewers",
+						position: "OF",
+						drafted: true
+					}),
+					textboxTracker = new Tracker($name, {
+						linkedObj: player
+					}),
+					$drafted = $("#drafted"),
+					checkboxTracker = new Tracker($drafted, {
+						linkedObj: player
+					});
+			});
+		</script>
+    </body>
+</html>
+
