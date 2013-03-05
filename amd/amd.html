@@ -6,7 +6,10 @@
     </head>
     <body>
     	<input id='name' name='name' value='' /><br/><br/>
-    	<input type='checkbox' id='drafted' name='drafted' />drafted
+    	<input type='checkbox' id='drafted' name='drafted' />drafted<br/><br/>
+    	<input type='radio' name='nickname' value='Hebrew Hammer' />Hebrew Hammer
+    	<input type='radio' name='nickname' value='Brauny' />Brauny
+    	<input type='radio' name='nickname' value='MVP' />MVP
 
 		<script type="text/javascript" src="require.js"></script>
 		<script type="text/javascript">
@@ -23,13 +26,18 @@
 						name: "Ryan Braun",
 						team: "Milwaukee Brewers",
 						position: "OF",
-						drafted: true
+						drafted: true,
+						nickname: "Hebrew Hammer"
 					}),
 					textboxTracker = new Tracker($name, {
 						linkedObj: player
 					}),
 					$drafted = $("#drafted"),
 					checkboxTracker = new Tracker($drafted, {
+						linkedObj: player
+					}),
+					$nickname = $("input[name=nickname]"),
+					tracker = new Tracker($nickname, {
 						linkedObj: player
 					});
 			});
