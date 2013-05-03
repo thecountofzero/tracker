@@ -379,7 +379,7 @@ steal('can/control', 'can/observe', 'can/util', function(Control, Observe, Util)
                             self._val.call(self, newVal);
 
                             // FIXME: Need to keep an eye on this change as this is going to result in an attempted update to the can.Observe
-                            self.element.trigger('change');
+                            //self.element.trigger('change');
                         }
                         self.element[self.changed() ? "addClass" : "removeClass"](self.options.dirtyClass);
                     };
