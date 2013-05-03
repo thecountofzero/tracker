@@ -1,0 +1,19 @@
+Name: <%== tracked_input(player, 'name.first') %><br/><br/>
+
+2012 Fantasy Points: <%== tracked_input(player, 'fantasy.2012.points') %><br/><br/>
+
+Position: <%== tracked_select([
+		{text: 'Catcher', value: 'C'},
+		{text: '1st Base', value: '1B'},
+		{text: '2nd Base', value: '2B'},
+		{text: '3rd Base', value: '3B'},
+		{text: 'Shortstop', value: 'SS'},
+		{text: 'Outfield', value: 'OF'},
+		{text: 'Starting Pitcher', value: 'SP'},
+	], player, 'position') %><br/><br/>
+
+Team: <%== tracked_input(player, 'team', {
+	changeCallback: function(val) {
+		console.log('The value has been changed to: ' + val);
+	}
+}) %><br/><br/>
