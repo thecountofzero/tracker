@@ -228,5 +228,5 @@ observe.attr("favoriteColor", "black") --> Selects "black" radio button
 
 Fiddle Demonstrating Tracker:
 
-http://jsfiddle.net/thecountofzero/qYdwR/598/
+http://jsfiddle.net/thecountofzero/b3aCU/
 
